@@ -60,6 +60,35 @@ void deCesarSH(char* lang, int size, int key){
         }
     }
 }
+int srtLength(char *in) {
+    int count = 0;
+    while(1){
+        if(*in++ == '\0') break;
+        count++;
+    }
+    return count;
+}
+
+char* shuffle(char* in, int key, int encrypt){
+    int length = 0;
+    length = srtLength(in);
+    if(length == 0) return nullptr;
+    const int len = key * (1 + ((length - 1) / key));
+
+    char* out = new char[len];
+    if(encrypt == 0) key = len / key;
+    int idx = 0;
+    for(int i = 0; i < key; i++){
+        for(int j = i; j < len; j += key){
+            out[idx++] = (*(in + j)) ? *(in + j) : (char) '*';
+        }
+    }
+    out[len] = 0;
+    return out;
+}
+
+
+
 
 int main() {
 
@@ -72,7 +101,12 @@ int main() {
     deCesarSH(string, size, key);
     print(string, size);
 
-
+    char* msg = "This is string long? long string";
+    print(msg, srtLength(msg));
+    char *encrypt = shuffle(msg, 4, 1);
+    print(encrypt, srtLength(encrypt));
+    char *decrypt = shuffle(encrypt, 4, 0);
+    print(decrypt, srtLength(decrypt));
 
     return 0;
 }
